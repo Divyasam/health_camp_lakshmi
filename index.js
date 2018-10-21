@@ -16,14 +16,14 @@ var server = app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 const { Client } = require('pg');
 const dbClient = new Client({
-  connectionString: 'postgres://pjixiwwwdzjkng:b2e9b8d0e4189c607b9a9c59c7db262974db983616d75f8f99766d595b887ab6@ec2-107-20-211-10.compute-1.amazonaws.com:5432/d1h0gtcm5k3464',
+  connectionString: 'postgres://fztndhoubtzhde:2fd00fef3f8478ea378364e5ae83ac99e522766f759b6c321ee13fb62fa4d146@ec2-54-156-0-178.compute-1.amazonaws.com:5432/dbpok7hsbh7hlr',
   ssl: true,
 });
 
 dbClient.connect();
 
 app.post('/savePersonalInfo', function(req, res) {
-  const text = 'INSERT INTO healthrecords4(Id, FirstName, LastName, Gender, Age, Details, Photo) VALUES($1, $2, $3, $4, $5, $6, $7)';
+  const text = 'INSERT INTO patientDetails(Id, FirstName, LastName, Gender, Age, Details, Photo) VALUES($1, $2, $3, $4, $5, $6, $7)';
   const values = [req.body.id, req.body.fn, req.body.ln, req.body.gn, req.body.ag, req.body.dt, req.body.ph];
   dbClient.query(text, values, (err, res) => {
     if (err) {
@@ -34,7 +34,7 @@ app.post('/savePersonalInfo', function(req, res) {
 });
 
 app.post('/saveHealthInfo', function(req, res) {
-  const text = 'UPDATE healthrecords4 SET Height=$1, Weight=$2, BodyTemp=$3, Pulse=$4, BloodPressure=$5, Medications=$6, Notes=$7 WHERE ID=$8';
+  const text = 'UPDATE patientDetails SET Height=$1, Weight=$2, BodyTemp=$3, Pulse=$4, BloodPressure=$5, Medications=$6, Notes=$7 WHERE ID=$8';
   const values = [req.body.ht, req.body.wt, req.body.bt, req.body.pr, req.body.bp, req.body.md, req.body.nt, req.body.id];
   dbClient.query(text, values, (err, res) => {
     if (err) {
@@ -45,7 +45,7 @@ app.post('/saveHealthInfo', function(req, res) {
 });
 
 app.get('/retrieveInfo', async function(req, res) {
-  const { rows } = await dbClient.query("SELECT * FROM healthrecords4");
+  const { rows } = await dbClient.query("SELECT * FROM patientDetails");
   res.send(JSON.stringify(rows));
 });
 
